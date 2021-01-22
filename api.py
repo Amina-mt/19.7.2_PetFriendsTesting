@@ -106,28 +106,6 @@ class PetFriends:
             result = res.text
         return status, result
 
-    def add_new_pet_without_photo(self, auth_key: json, name: str, animal_type: str,
-                    age: int) -> json:
-        """The method sends (posts) data of added pet to the server and returns the status
-         request to the server and the result in JSON format with the data of the added pet"""
-
-        data = MultipartEncoder(
-            fields={
-                'name': name,
-                'animal_type': animal_type,
-                'age': age
-            })
-        headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
-
-        res = requests.post(self.base_url + 'api/pets', headers=headers, data=data)
-        status = res.status_code
-        result = ""
-        try:
-            result = res.json()
-        except json.decoder.JSONDecodeError:
-            result = res.text
-        print(result)
-        return status, result
 
     def add_new_pet_animal_type_cyrillic(self, auth_key: json, name: str, animal_type: str,
                     age: int, pet_photo: str) -> json:
@@ -140,28 +118,6 @@ class PetFriends:
                 'animal_type': animal_type,
                 'age': age,
                 'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'images/dog.jpg')
-            })
-        headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
-
-        res = requests.post(self.base_url + 'api/pets', headers=headers, data=data)
-        status = res.status_code
-        result = ""
-        try:
-            result = res.json()
-        except json.decoder.JSONDecodeError:
-            result = res.text
-        print(result)
-        return status, result
-
-    def add_new_pet_with_bad_photo(self, auth_key: json, name: str, animal_type: str,
-                    age: int, pet_photo: str) -> json:
-
-        data = MultipartEncoder(
-            fields={
-                'name': name,
-                'animal_type': animal_type,
-                'age': age,
-                'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'images/text.txt')
             })
         headers = {'auth_key': auth_key['key'], 'Content-Type': data.content_type}
 
@@ -282,23 +238,6 @@ class PetFriends:
         }
 
         res = requests.put(self.base_url + 'api/pets/' + pet_id, headers=headers, data=data)
-        status = res.status_code
-        result = ""
-        try:
-            result = res.json()
-        except json.decoder.JSONDecodeError:
-            result = res.text
-        return status, result
-
-    def set_pet_photo_added_pet(self, auth_key: json, pet_photo: str) -> json:
-        data = MultipartEncoder(
-            fields={
-                'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'images/pomeranian.jpg')
-            })
-
-        headers = {'auth_key': auth_key['key']}
-
-        res = requests.post(self.base_url + 'api/pets/' + pet_id, headers=headers, data=data)
         status = res.status_code
         result = ""
         try:
