@@ -91,20 +91,6 @@ def test_successful_update_self_pet_info(name='Daisy', animal_type='husky', age=
         raise Exception("There is no my pets")
 
 
-def test_add_new_pet_without_photo(name='name_1', animal_type='animal_type_1',
-                                     age='age_1'):
-    """Checking if we are able to add a new pet without photo"""
-
-    # Requesting api key and saving in the variable of auth_key
-    _, auth_key = pf.get_api_key(valid_email, valid_password)
-
-    # Adding a new pet
-    status, result = pf.add_new_pet(auth_key, name, animal_type, age)
-
-    # Checking received response with the expected result
-    assert status == 200
-    assert result['name'] == name
-
 def test_add_new_pet_animal_type_cyrillic(name='Diamond', animal_type='пудель', age='2', pet_photo='images/пудель.jpg'):
     """Checking if we are able to add a new pet with animal_type in cyrillic data"""
 
@@ -120,22 +106,6 @@ def test_add_new_pet_animal_type_cyrillic(name='Diamond', animal_type='пуде�
     # Checking received response with the expected result
     assert status == 200
     assert result['name'] == name
-
-def test_post_add_new_pet_with_bad_photo(name='Leo', animal_type='pomeranian', age=1, pet_photo='images/text.txt'):
-    """Adding a new pet with a photo but the format of saved file is txt instead of jpg"""
-
-    # Getting the full path of the pet's image and saving it to the variable pet_photo
-    pet_photo = os.path.join(os.path.dirname(__file__), pet_photo)
-
-    # Requesting api key and saving in the variable of auth_key
-    _, auth_key = pf.get_api_key(valid_email, valid_password)
-
-    # Adding a new pet
-    status, result = pf.post_add_new_pet_with_photo(auth_key, name, animal_type, age, pet_photo)
-
-    # Checking if we can add txt format file instead of photo
-    assert status == 200
-    assert 'txt' in pet_photo
 
 def test_add_new_pet_incorrect_data(name='!@#$%^&*:"\<>?', animal_type='33333', age='123456789', pet_photo='images/dog.jpg'):
     """Checking if we are able to add a new pet with incorrect data"""
@@ -266,14 +236,3 @@ def test_get_api_key_for_invalid_log_in(email=valid_email, password=valid_passwo
     # Checking the received data with our expectations
     assert status == 200
     assert 'key' in result
-
-def test_set_pet_photo_added_pet(pet_photo='images/pomeranian.jpg'):
-    """Checking if we are able to set a photo to the added pet"""
-
-    pet_photo = os.path.join(os.path.dirname(__file__), pet_photo)
-    _, auth_key = pf.get_api_key(valid_email, valid_password)
-    _, my_pets = pf.get_list_of_pets(auth_key, "my_pets")
-    pet_id = my_pets['pets'][1]['id']
-    status, result = pf.set_pet_photo_added_pet(auth_key, pet_id, pet_photo)
-    assert status == 200
-    assert 'jpg' in pet_photo
